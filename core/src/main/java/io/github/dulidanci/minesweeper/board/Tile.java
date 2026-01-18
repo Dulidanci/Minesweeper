@@ -1,40 +1,31 @@
 package io.github.dulidanci.minesweeper.board;
 
 public class Tile {
-    public int x;
-    public int y;
     public boolean discovered;
     public boolean mine;
+    public boolean flag;
     public int number;
 
-    public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Tile() {
         discovered = false;
         number = 0;
         mine = false;
+        flag = false;
     }
 
-    public Tile(int x, int y, boolean discovered, boolean mine, int number) {
-        this.x = x;
-        this.y = y;
+    public void setDiscovered(boolean discovered) {
         this.discovered = discovered;
+    }
+
+    public void setMine(boolean mine) {
         this.mine = mine;
+    }
+
+    public void setNumber(int number) {
         this.number = number;
     }
 
-    public Tile setDiscovered(boolean discovered) {
-        this.discovered = discovered;
-        return this;
-    }
-
-    public Tile setMine(boolean mine) {
-        this.mine = mine;
-        return this;
-    }
-
-    public Tile setNumber(int number) {
-        this.number = number;
-        return this;
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 }

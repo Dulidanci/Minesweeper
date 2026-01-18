@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
+    private final Minesweeper minesweeper;
     private final Tile[][] grid;
     public final int height;
     public final int width;
     public boolean firstClick;
 
-    public Board(int height, int width) {
+    public Board(int height, int width, Minesweeper minesweeper) {
+        this.minesweeper = minesweeper;
         this.height = height;
         this.width = width;
         this.grid = new Tile[height][width];
@@ -22,7 +24,7 @@ public class Board {
     public void prepare() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                setTile(j, i, new Tile(j, i));
+                setTile(j, i, new Tile());
             }
         }
     }
@@ -41,7 +43,23 @@ public class Board {
         grid[y][x] = tile;
     }
 
-    public void clicked(int x, int y) {
+    public void clicked(int x, int y, boolean rightClick) {
+        if (validateInput(x, y)) {
+            if (rightClick) {
+                rightClicked(x, y);
+            } else {
+                Tile tile = getTile(x, y);
+                if (tile.flag) {
+                    rightClicked(x, y);
+                } else {
+                    leftClicked(x, y);
+                }
+            }
+        }
+        checkWin();
+    }
+
+    private void leftClicked(int x, int y) {
         if (!validateInput(x, y)) return;
 
         if (firstClick) {
@@ -58,12 +76,19 @@ public class Board {
             } else if (clickedTile.number == 0) {
                 for (int i = -1; i <= 1; i++) {
                     for (int j = -1; j <= 1; j++) {
-                        clicked(x + i, y + j);
+                        leftClicked(x + i, y + j);
                     }
                 }
             }
         }
     }
+
+    private void rightClicked(int x, int y) {
+        if (!validateInput(x, y)) return;
+        Tile tile = getTile(x, y);
+        tile.setFlag(!tile.flag);
+    }
+
 
     private void calculate(int excludeX, int excludeY) {
         List<Position> indexes = new ArrayList<>();
@@ -115,6 +140,21 @@ public class Board {
                 if (getTile(j, i).mine) getTile(j, i).setDiscovered(true);
             }
         }
-        // todo: send a message that the game ended
+        minesweeper.lost = true;
+    }
+
+    public void checkWin() {
+        int undiscovered = 0;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Tile tile = getTile(j, i);
+                if (!tile.discovered) {
+                    undiscovered++;
+                }
+            }
+        }
+        if (undiscovered == Minesweeper.mines) {
+            minesweeper.won = true;
+        }
     }
 }

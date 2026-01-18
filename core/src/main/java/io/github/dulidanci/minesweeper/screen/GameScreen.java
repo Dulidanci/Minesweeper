@@ -13,21 +13,20 @@ import io.github.dulidanci.minesweeper.Minesweeper;
 import io.github.dulidanci.minesweeper.board.Board;
 import io.github.dulidanci.minesweeper.board.Tile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
     public final Minesweeper game;
-    public SpriteBatch batch;
-    public FitViewport viewport;
-    public Texture mineTexture;
-    public Texture flagTexture;
-    public Texture tileOpenTexture;
-    public Texture tileCloseTexture;
-    public List<Texture> numberTextures;
-
-
-    Vector2 mousePos;
+    public final SpriteBatch batch;
+    public final FitViewport viewport;
+    public final Texture mineTexture;
+    public final Texture flagTexture;
+    public final Texture tileOpenTexture;
+    public final Texture tileCloseTexture;
+    public final List<Texture> numberTextures;
+    public final String winMessage;
+    public final String loseMessage;
+    public final Vector2 mousePos;
 
 
     public GameScreen(Minesweeper game) {
@@ -51,6 +50,9 @@ public class GameScreen implements Screen {
             new Texture("8.png")
         );
 
+        winMessage = "Great job! You've found all the mines!";
+        loseMessage = "Oh no! You've exploded and lost!";
+
         mousePos = new Vector2();
     }
 
@@ -66,11 +68,19 @@ public class GameScreen implements Screen {
     }
 
     public void input() {
+        if (game.won || game.lost) return;
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             mousePos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(mousePos);
 
-            game.board.clicked((int) mousePos.x - 1, (int) mousePos.y - 1);
+            game.board.clicked((int) mousePos.x - 1, (int) mousePos.y - 1, false);
+
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+            mousePos.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(mousePos);
+
+            game.board.clicked((int) mousePos.x - 1, (int) mousePos.y - 1, true);
         }
     }
 
@@ -95,8 +105,15 @@ public class GameScreen implements Screen {
                     }
                 } else {
                     batch.draw(tileCloseTexture, j + 1, i + 1, 1, 1);
+                    if (tile.flag) {
+                        batch.draw(flagTexture, j + 1, i + 1, 1, 1);
+                    }
                 }
             }
+        }
+
+        if (game.lost || game.won) {
+            game.font.draw(game.batch, game.lost ? loseMessage : winMessage, 1, viewport.getWorldHeight() - 0.5f);
         }
 
         batch.end();
