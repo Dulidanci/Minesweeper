@@ -13,9 +13,9 @@ public class Minesweeper extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public FitViewport viewport;
-    public static final int height = 20;
-    public static final int width = 25;
-    public static final int mines = 100;
+    public static final int height = 8;
+    public static final int width = 10;
+    public static final int mines = 10;
     public Board board;
     public boolean won;
     public boolean lost;

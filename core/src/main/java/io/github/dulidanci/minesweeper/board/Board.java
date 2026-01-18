@@ -11,6 +11,7 @@ public class Board {
     public final int height;
     public final int width;
     public boolean firstClick;
+    public int flagCount;
 
     public Board(int height, int width, Minesweeper minesweeper) {
         this.minesweeper = minesweeper;
@@ -18,6 +19,7 @@ public class Board {
         this.width = width;
         this.grid = new Tile[height][width];
         firstClick = true;
+        flagCount = 0;
         prepare();
     }
 
@@ -27,6 +29,14 @@ public class Board {
                 setTile(j, i, new Tile());
             }
         }
+    }
+
+    public void reset() {
+        firstClick = true;
+        flagCount = 0;
+        prepare();
+        minesweeper.won = false;
+        minesweeper.lost = false;
     }
 
     public boolean validateInput(int x, int y) {
@@ -57,6 +67,7 @@ public class Board {
             }
         }
         checkWin();
+        countFlag();
     }
 
     private void leftClicked(int x, int y) {
@@ -156,5 +167,18 @@ public class Board {
         if (undiscovered == Minesweeper.mines) {
             minesweeper.won = true;
         }
+    }
+
+    public void countFlag() {
+        int count = 0;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Tile tile = getTile(j, i);
+                if (!tile.discovered && tile.flag) {
+                    count++;
+                }
+            }
+        }
+        flagCount = count;
     }
 }

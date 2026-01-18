@@ -26,6 +26,7 @@ public class GameScreen implements Screen {
     public final List<Texture> numberTextures;
     public final String winMessage;
     public final String loseMessage;
+    public final String resetMessage;
     public final Vector2 mousePos;
 
 
@@ -52,6 +53,7 @@ public class GameScreen implements Screen {
 
         winMessage = "Great job! You've found all the mines!";
         loseMessage = "Oh no! You've exploded and lost!";
+        resetMessage = "Press 'R' to restart the game!";
 
         mousePos = new Vector2();
     }
@@ -68,6 +70,10 @@ public class GameScreen implements Screen {
     }
 
     public void input() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            game.board.reset();
+        }
+
         if (game.won || game.lost) return;
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -114,7 +120,11 @@ public class GameScreen implements Screen {
 
         if (game.lost || game.won) {
             game.font.draw(game.batch, game.lost ? loseMessage : winMessage, 1, viewport.getWorldHeight() - 0.5f);
+            game.font.draw(game.batch, resetMessage, 1, 0.75f);
         }
+
+        batch.draw(flagTexture, viewport.getWorldWidth() - 3, viewport.getWorldHeight() - 1, 1, 1);
+        game.font.draw(game.batch, ": " + (Minesweeper.mines - board.flagCount), viewport.getWorldWidth() - 2, viewport.getWorldHeight() - 0.5f);
 
         batch.end();
     }
