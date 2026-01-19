@@ -30,6 +30,7 @@ public class GameScreen implements Screen {
     public final Texture difficultyArrowTexture;
     public final Sprite difficultyArrowSprite;
     public final Texture difficultyTickTexture;
+    public final List<Texture> faceTextures;
     public final String winMessage;
     public final String loseMessage;
     public final String resetMessage;
@@ -59,6 +60,11 @@ public class GameScreen implements Screen {
         difficultyBackgroundTexture = new Texture("difficulty_background.png");
         difficultyArrowTexture = new Texture("difficulty_arrow.png");
         difficultyTickTexture = new Texture("difficulty_tick.png");
+        faceTextures = List.of(
+            new Texture("face.png"),
+            new Texture("face_dead.png"),
+            new Texture("face_cool.png")
+        );
 
         difficultyArrowSprite = new Sprite(difficultyArrowTexture);
         difficultyArrowSprite.setSize(1, 0.75f);
@@ -158,6 +164,11 @@ public class GameScreen implements Screen {
             game.font.draw(game.batch, game.lost ? loseMessage : winMessage, 1, viewport.getWorldHeight() - 1.25f);
             game.font.draw(game.batch, resetMessage, 1, 0.75f);
 
+            batch.draw(game.lost ? faceTextures.get(1) : faceTextures.get(2), viewport.getWorldWidth() / 2 - 0.5f,
+                viewport.getWorldHeight() - 1.125f, 1, 1);
+        } else {
+            batch.draw(faceTextures.get(0), viewport.getWorldWidth() / 2 - 0.5f,
+                viewport.getWorldHeight() - 1.125f, 1, 1);
         }
 
         float buttonHeight = 0.75f;
@@ -222,5 +233,8 @@ public class GameScreen implements Screen {
         difficultyBackgroundTexture.dispose();
         difficultyArrowTexture.dispose();
         difficultyTickTexture.dispose();
+        for (Texture texture : faceTextures) {
+            texture.dispose();
+        }
     }
 }
