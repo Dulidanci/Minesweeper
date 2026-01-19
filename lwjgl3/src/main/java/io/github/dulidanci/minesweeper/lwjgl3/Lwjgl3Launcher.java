@@ -28,7 +28,7 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        configuration.setWindowedMode((Minesweeper.width + 2) * 32, (Minesweeper.height + 2) * 32);
+        configuration.setWindowedMode(17 * 32, 14 * 32);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("mine.png");

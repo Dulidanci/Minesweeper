@@ -31,14 +31,6 @@ public class Board {
         }
     }
 
-    public void reset() {
-        firstClick = true;
-        flagCount = 0;
-        prepare();
-        minesweeper.won = false;
-        minesweeper.lost = false;
-    }
-
     public boolean validateInput(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
@@ -117,7 +109,7 @@ public class Board {
         }
 
         List<Position> mines = new ArrayList<>();
-        for (int i = 0; i < Minesweeper.mines; i++) {
+        for (int i = 0; i < minesweeper.difficulty.getMines(); i++) {
             int chosen = (int) (Math.random() * indexes.size());
             mines.add(indexes.get(chosen));
             indexes.remove(chosen);
@@ -164,7 +156,7 @@ public class Board {
                 }
             }
         }
-        if (undiscovered == Minesweeper.mines) {
+        if (undiscovered == minesweeper.difficulty.getMines()) {
             minesweeper.won = true;
         }
     }
